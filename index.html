@@ -45,15 +45,31 @@
             object-fit: contain;
         }
         @media (max-width: 767.98px) {
-            /* On a narrow/tall mobile hero box, "contain" against this
-               landscape-shaped photo letterboxes it — leaving a big empty
-               gap above and below the visible image. "cover" fills the
-               box edge-to-edge instead, cropping the sides as needed. */
+            /* This landscape-shaped group photo can't both fill a narrow/tall
+               mobile hero box AND stay fully uncropped — one has to give.
+               Chosen here: show the whole photo. Take .at-hero-bg out of its
+               absolute/fill-the-section positioning so the image renders at
+               its own natural (full-width) height as a normal block, and
+               the title/button content flows below it instead of overlapping
+               it — rather than fighting the section's desktop-tuned height.
+               .at-hero-spacing's padding-top is what used to reserve all
+               that vertical space for the old overlay composition; it's
+               undone below since the image now provides its own height. */
+            .at-hero-spacing {
+                padding-top: 20px !important;
+            }
+            .at-hero-bg {
+                position: static;
+                transform: none;
+                display: block;
+                width: 100%;
+                margin-bottom: 24px;
+            }
             .at-hero-bg img {
                 width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center;
+                height: auto;
+                object-fit: contain;
+                display: block;
             }
         }
         .at-header-area {

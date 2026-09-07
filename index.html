@@ -46,13 +46,21 @@
             object-fit: contain;
         }
         .at-header-area {
+            background: rgba(15, 8, 4, .15);
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
             transition: background-color .35s ease, backdrop-filter .35s ease, box-shadow .35s ease;
         }
         .at-header-area.is-scrolled {
-            background: rgba(8, 8, 8, .82);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(10, 5, 3, .5);
+            backdrop-filter: blur(18px) saturate(150%);
+            -webkit-backdrop-filter: blur(18px) saturate(150%);
             box-shadow: 0 8px 30px rgba(0, 0, 0, .25);
+        }
+        .at-main-menu.menu-light.style-1 {
+            background: rgba(255, 255, 255, .12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
         .hire-me-btn {
             --bs-btn-padding-x: 1.15rem;
@@ -216,6 +224,14 @@
                so the same offset drags it up into the paragraph text. */
             .at-about-svg-wrap {
                 transform: none;
+            }
+        }
+        @media (min-width: 768px) and (max-width: 1199.98px) {
+            /* No breakpoint existed between the 767px and 1920px hero-title
+               rules, so tablets rendered the full desktop size (~52px) —
+               tight enough to touch both edges of the hero. */
+            .at-hero-title {
+                font-size: 44px;
             }
         }
     </style>
@@ -519,7 +535,7 @@
                         <img class="layer" data-depth="0.8" src="assets/imgs/pages/img-1.webp" alt="AMGFX">
                     </div>
                     <div class="container p-relative">
-                        <div class="d-none d-md-block position-absolute start-0 bottom-0" style="width: 230px; z-index: 2;">
+                        <div class="d-none d-xl-block position-absolute start-0 bottom-0" style="width: 230px; z-index: 2;">
                             <div class="at-hero-video mb-30">
                                 <div class="rounded-3 overflow-hidden">
                                     <video class="img-cover" autoplay muted loop playsinline>
@@ -685,7 +701,7 @@
                                     <h3 class="at-section-title mb-0">
                                         <span>Where Craft Meets Vision</span>
                                         <span class="at-about-btn-transform ml-20">
-                                            <a class="at-btn" href="javascript:void(0)" aria-disabled="true">
+                                            <a class="at-btn" href="index.html#contact">
                                                 <span>
                                                     <span class="text-1">GET IN TOUCH</span>
                                                     <span class="text-2">GET IN TOUCH</span>
@@ -1596,20 +1612,28 @@
     <script>
         // On mobile, the gsap ScrollTrigger-based reveal animations (fade-ins,
         // char-by-char SplitText headings, image zoom-reveals, odometer counters)
-        // routinely get stuck at their pre-animation state — likely because their
-        // trigger positions are computed against the ScrollSmoother's virtualized
-        // scroll, which doesn't track touch-scroll the same way it tracks desktop
-        // wheel/drag input. Rather than debug that pipeline, just disable every
-        // scroll-linked reveal below the lg breakpoint and snap content straight
-        // to its finished state — nothing is lost since the animation is purely
-        // decorative.
+        // routinely get stuck at their pre-animation state, and ScrollSmoother's
+        // smoothed/lagged touch-scroll tracking (smoothTouch: 0.15) is unreliable
+        // on phones generally. Rather than debug that whole pipeline, disable
+        // ScrollSmoother and every scroll-linked reveal below the lg breakpoint,
+        // falling back to plain native scrolling with content snapped straight to
+        // its finished state — nothing is lost since the animation/parallax is
+        // purely decorative.
         (function () {
             if (!window.matchMedia('(max-width: 991px)').matches) return;
 
             function finalize() {
+                if (typeof ScrollSmoother !== 'undefined') {
+                    var smoother = ScrollSmoother.get();
+                    if (smoother) smoother.kill();
+                }
                 if (typeof ScrollTrigger !== 'undefined') {
                     ScrollTrigger.getAll().forEach(function (st) { st.kill(); });
                 }
+                var wrapper = document.getElementById('smooth-wrapper');
+                var content = document.getElementById('smooth-content');
+                if (wrapper) { wrapper.style.overflow = 'visible'; wrapper.style.position = 'static'; wrapper.style.height = 'auto'; }
+                if (content) { content.style.transform = 'none'; content.style.position = 'static'; }
 
                 document.querySelectorAll('.odometer').forEach(function (el) {
                     var count = el.getAttribute('data-count');

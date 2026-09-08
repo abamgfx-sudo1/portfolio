@@ -197,6 +197,19 @@
         .at-service-item .thumb img {
             aspect-ratio: 4 / 5;
         }
+        /* .content .text is opacity:0/max-height:0 by default and only
+           reveals on :hover - touch screens have no real hover, so on
+           mobile it's shown permanently instead, with room added below
+           the title so the two don't run into each other. */
+        @media (max-width: 574.98px) {
+            .at-service-item .content .title {
+                margin-bottom: 8px;
+            }
+            .at-service-item .content .text {
+                opacity: 1;
+                max-height: none;
+            }
+        }
         .at-hero-content {
             text-align: center;
             margin-left: auto;
@@ -864,96 +877,86 @@
                             </div>
                             <div class="col-xxl-7 ms-auto col-lg-8 col-xl-8 mb-40">
                                 <div class="at-service-list-wrap">
-                                    <a href="portfolio-football.html">
-                                        <div class="at-service-item service-item">
-                                            <div class="count">
-                                                <span class="number">[01]</span>
-                                            </div>
-
-                                            <div class="content">
-                                                <h1 class="title">Football Designs</h1>
-
-                                                <p class="text">
-                                                    Bold match-day posters and player edits for clubs, fans, and football culture.</p>
-                                            </div>
-
-                                            <div class="thumb anim-zoomin">
-                                                <img loading="lazy" decoding="async" src="assets/imgs/pages/football posters/cr7.webp" alt="Football Designs">
-                                            </div>
+                                    <div class="at-service-item service-item">
+                                        <div class="count">
+                                            <span class="number">[01]</span>
                                         </div>
-                                    </a>
-                                    <a href="portfolio-project.html">
-                                        <div class="at-service-item service-item">
-                                            <div class="count">
-                                                <span class="number">[02]</span>
-                                            </div>
 
-                                            <div class="content">
-                                                <h1 class="title">Cricket Designs</h1>
+                                        <div class="content">
+                                            <h1 class="title">Football Designs</h1>
 
-                                                <p class="text">
-                                                    Iconic cricket posters that celebrate legends, records, and unforgettable innings.</p>
-                                            </div>
-
-                                            <div class="thumb anim-zoomin">
-                                                <img loading="lazy" decoding="async" src="assets/imgs/pages/projects/sachin-tendulkar.jpg" alt="Cricket Designs">
-                                            </div>
+                                            <p class="text">
+                                                Bold match-day posters and player edits for clubs, fans, and football culture.</p>
                                         </div>
-                                    </a>
-                                    <a href="portfolio-project.html">
-                                        <div class="at-service-item service-item">
-                                            <div class="count">
-                                                <span class="number">[03]</span>
-                                            </div>
 
-                                            <div class="content">
-                                                <h1 class="title">Basketball Designs</h1>
-
-                                                <p class="text">
-                                                    High-energy basketball graphics built for players, teams, and courtside culture.</p>
-                                            </div>
-
-                                            <div class="thumb anim-zoomin">
-                                                <img loading="lazy" decoding="async" src="assets/imgs/pages/projects/nikola-jokic.jpg" alt="Basketball Designs">
-                                            </div>
+                                        <div class="thumb anim-zoomin">
+                                            <img loading="lazy" decoding="async" src="assets/imgs/pages/football posters/cr7.webp" alt="Football Designs">
                                         </div>
-                                    </a>
-                                    <a href="portfolio-project.html">
-                                        <div class="at-service-item service-item">
-                                            <div class="count">
-                                                <span class="number">[04]</span>
-                                            </div>
-
-                                            <div class="content">
-                                                <h1 class="title">MMA Designs</h1>
-
-                                                <p class="text">
-                                                    Hard-hitting MMA posters that bring fight night intensity to every frame.</p>
-                                            </div>
-
-                                            <div class="thumb anim-zoomin">
-                                                <img loading="lazy" decoding="async" src="assets/imgs/pages/projects/khabib.jpg" alt="MMA Designs">
-                                            </div>
+                                    </div>
+                                    <div class="at-service-item service-item">
+                                        <div class="count">
+                                            <span class="number">[02]</span>
                                         </div>
-                                    </a>
-                                    <a href="portfolio-project.html">
-                                        <div class="at-service-item service-item">
-                                            <div class="count">
-                                                <span class="number">[05]</span>
-                                            </div>
 
-                                            <div class="content">
-                                                <h1 class="title">Motorsport Designs</h1>
+                                        <div class="content">
+                                            <h1 class="title">Cricket Designs</h1>
 
-                                                <p class="text">
-                                                    Dynamic motorsport posters that capture speed, precision, and racing legends.</p>
-                                            </div>
-
-                                            <div class="thumb anim-zoomin">
-                                                <img loading="lazy" decoding="async" src="assets/imgs/pages/projects/valentino-rossi.jpg" alt="Motorsport Designs">
-                                            </div>
+                                            <p class="text">
+                                                Iconic cricket posters that celebrate legends, records, and unforgettable innings.</p>
                                         </div>
-                                    </a>
+
+                                        <div class="thumb anim-zoomin">
+                                            <img loading="lazy" decoding="async" src="assets/imgs/pages/projects/sachin-tendulkar.jpg" alt="Cricket Designs">
+                                        </div>
+                                    </div>
+                                    <div class="at-service-item service-item">
+                                        <div class="count">
+                                            <span class="number">[03]</span>
+                                        </div>
+
+                                        <div class="content">
+                                            <h1 class="title">Basketball Designs</h1>
+
+                                            <p class="text">
+                                                High-energy basketball graphics built for players, teams, and courtside culture.</p>
+                                        </div>
+
+                                        <div class="thumb anim-zoomin">
+                                            <img loading="lazy" decoding="async" src="assets/imgs/pages/projects/nikola-jokic.jpg" alt="Basketball Designs">
+                                        </div>
+                                    </div>
+                                    <div class="at-service-item service-item">
+                                        <div class="count">
+                                            <span class="number">[04]</span>
+                                        </div>
+
+                                        <div class="content">
+                                            <h1 class="title">MMA Designs</h1>
+
+                                            <p class="text">
+                                                Hard-hitting MMA posters that bring fight night intensity to every frame.</p>
+                                        </div>
+
+                                        <div class="thumb anim-zoomin">
+                                            <img loading="lazy" decoding="async" src="assets/imgs/pages/projects/khabib.jpg" alt="MMA Designs">
+                                        </div>
+                                    </div>
+                                    <div class="at-service-item service-item">
+                                        <div class="count">
+                                            <span class="number">[05]</span>
+                                        </div>
+
+                                        <div class="content">
+                                            <h1 class="title">Motorsport Designs</h1>
+
+                                            <p class="text">
+                                                Dynamic motorsport posters that capture speed, precision, and racing legends.</p>
+                                        </div>
+
+                                        <div class="thumb anim-zoomin">
+                                            <img loading="lazy" decoding="async" src="assets/imgs/pages/projects/valentino-rossi.jpg" alt="Motorsport Designs">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

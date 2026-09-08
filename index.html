@@ -1621,32 +1621,29 @@
     </script>
 
     <script>
-        // On mobile, the gsap ScrollTrigger-based reveal animations (fade-ins,
-        // char-by-char SplitText headings, image zoom-reveals, odometer counters)
-        // routinely get stuck at their pre-animation state, and ScrollSmoother's
-        // smoothed/lagged touch-scroll tracking (smoothTouch: 0.15) is unreliable
-        // on phones generally. Rather than debug that whole pipeline, disable
-        // ScrollSmoother and every scroll-linked reveal below the lg breakpoint,
-        // falling back to plain native scrolling with content snapped straight to
-        // its finished state — nothing is lost since the animation/parallax is
-        // purely decorative.
+        // On mobile, gsap's ScrollTrigger-based reveal animations (fade-ins,
+        // char-by-char SplitText headings, image zoom-reveals, odometer
+        // counters) can get stuck at their pre-animation state, because
+        // ScrollSmoother's touch-scroll tracking is unreliable on phones.
+        // Killing ScrollSmoother entirely fixed that, but also kills the
+        // data-speed parallax movement on images (it depends on the same
+        // system). So instead: keep ScrollSmoother/ScrollTrigger running
+        // (parallax works when it works), and run a lightweight rescue pass
+        // on a timer that snaps any element still stuck invisible to its
+        // finished state. If a trigger fires correctly, this never touches
+        // it; if it doesn't, the element won't be stuck for more than one
+        // tick of this interval. Runs indefinitely (not just on load) since
+        // a trigger can fail at any scroll position, not just at the top.
         (function () {
             if (!window.matchMedia('(max-width: 991px)').matches) return;
 
-            function finalize() {
-                if (typeof ScrollSmoother !== 'undefined') {
-                    var smoother = ScrollSmoother.get();
-                    if (smoother) smoother.kill();
-                }
-                if (typeof ScrollTrigger !== 'undefined') {
-                    ScrollTrigger.getAll().forEach(function (st) { st.kill(); });
-                }
-                var wrapper = document.getElementById('smooth-wrapper');
-                var content = document.getElementById('smooth-content');
-                if (wrapper) { wrapper.style.overflow = 'visible'; wrapper.style.position = 'static'; wrapper.style.height = 'auto'; }
-                if (content) { content.style.transform = 'none'; content.style.position = 'static'; }
-
-                document.querySelectorAll('.odometer').forEach(function (el) {
+            var odometersFixed = false;
+            function fixOdometers() {
+                if (odometersFixed) return;
+                var odometers = document.querySelectorAll('.odometer');
+                if (!odometers.length) return;
+                odometersFixed = true;
+                odometers.forEach(function (el) {
                     var count = el.getAttribute('data-count');
                     if (!count) return;
                     // odometer.js attaches a MutationObserver directly to this node
@@ -1658,19 +1655,34 @@
                     replacement.textContent = count;
                     el.replaceWith(replacement);
                 });
+            }
 
-                var selectors = '.at_fade_anim, .anim-zoomin, .mg-portfolio-thumb, .reveal-text, .reveal-text *, .at-char-animation, .at-char-animation *, .at-rise-animation, .at-rise-animation *';
-                document.querySelectorAll(selectors).forEach(function (el) {
+            var rescueSelectors = '.at_fade_anim, .anim-zoomin, .mg-portfolio-thumb, .reveal-text, .reveal-text *, .at-char-animation, .at-char-animation *, .at-rise-animation, .at-rise-animation *';
+            function rescueStuckElements() {
+                document.querySelectorAll(rescueSelectors).forEach(function (el) {
                     if (!el.style) return;
-                    if (el.style.opacity !== '') el.style.opacity = '1';
-                    if (el.style.visibility === 'hidden') el.style.visibility = 'visible';
-                    if (el.style.transform && el.style.transform !== 'none') el.style.transform = 'none';
-                    if (el.style.scale && el.style.scale !== '1') el.style.scale = '1';
+                    var cs = getComputedStyle(el);
+                    // Only elements a reveal timeline left invisible — anything
+                    // gsap already animated to visible (or that's mid-scrub
+                    // toward it) is left alone so this doesn't fight it.
+                    if (parseFloat(cs.opacity) < 0.95 || cs.visibility === 'hidden') {
+                        el.style.opacity = '1';
+                        el.style.visibility = 'visible';
+                        el.style.transform = 'none';
+                        el.style.scale = '1';
+                    }
                 });
             }
 
             window.addEventListener('load', function () {
-                setTimeout(finalize, 800);
+                setTimeout(function () {
+                    fixOdometers();
+                    rescueStuckElements();
+                    setInterval(function () {
+                        fixOdometers();
+                        rescueStuckElements();
+                    }, 700);
+                }, 800);
             });
         })();
     </script>

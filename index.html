@@ -26,6 +26,9 @@
     <!-- Favicon icon-->
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/template/logo/AM white.png">
 
+    <!-- Hero image is the largest above-the-fold asset - start fetching it immediately -->
+    <link rel="preload" as="image" href="assets/imgs/pages/img-1.webp" fetchpriority="high">
+
     <!-- Libs CSS -->
     <link rel="stylesheet" href="assets/css/vendors/carouselTicker.css">
     <link rel="stylesheet" href="assets/css/vendors/bootstrap.min.css">
@@ -569,7 +572,7 @@
                 <!-- at-hero-area-start -->
                 <div class="at-hero-area scene p-relative z-index-1 bg-position fix at-hero-spacing bg-primary-1">
                     <div class="at-hero-bg at_fade_anim" data-speed=".8" data-delay=".4" data-fade-from="bottom" data-ease="bounce">
-                        <img class="layer" data-depth="0.8" src="assets/imgs/pages/img-1.webp" alt="AMGFX">
+                        <img class="layer" data-depth="0.8" fetchpriority="high" src="assets/imgs/pages/img-1.webp" alt="AMGFX">
                     </div>
                     <div class="container p-relative">
                         <div class="row align-items-end">
@@ -1650,8 +1653,17 @@
             }
 
             var rescueSelectors = '.at_fade_anim, .anim-zoomin, .mg-portfolio-thumb, .reveal-text, .reveal-text *, .at-char-animation, .at-char-animation *, .at-rise-animation, .at-rise-animation *';
+            // This set is static (nothing in it is added/removed after load), so
+            // it's queried once and the same NodeList is reused on every tick
+            // instead of re-querying+re-matching the whole selector against the
+            // DOM every 700ms forever - same elements checked, same fix applied,
+            // just without the repeated query cost.
+            var rescueTargets = null;
             function rescueStuckElements() {
-                document.querySelectorAll(rescueSelectors).forEach(function (el) {
+                if (rescueTargets === null) {
+                    rescueTargets = document.querySelectorAll(rescueSelectors);
+                }
+                rescueTargets.forEach(function (el) {
                     if (!el.style) return;
                     var cs = getComputedStyle(el);
                     // Only elements a reveal timeline left invisible — anything
@@ -1673,7 +1685,7 @@
                     setInterval(function () {
                         fixOdometers();
                         rescueStuckElements();
-                    }, 700);
+                    }, 1000);
                 }, 800);
             });
         })();

@@ -187,6 +187,16 @@
         .at-hero-area.bg-primary-1 {
             background-color: #F0460E;
         }
+        /* .at-service-item .thumb img has height:100% with no definite
+           container height, so before a lazy-loaded thumb finishes
+           downloading it has no intrinsic ratio to fall back on and
+           collapses to 0px tall - then pops to full height once loaded,
+           shoving every section below (including the pinned "Selected
+           Work" scroll animation) down mid-scroll. Reserving the space
+           up front removes the jump entirely. */
+        .at-service-item .thumb img {
+            aspect-ratio: 4 / 5;
+        }
         .at-hero-content {
             text-align: center;
             margin-left: auto;
